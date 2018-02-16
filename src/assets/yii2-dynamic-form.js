@@ -437,17 +437,18 @@
         }
 
         // "kartik-v/yii2-widget-select2"
-        var $hasSelect2 = $(widgetOptionsRoot.widgetItem).find('[data-krajee-select2]');
+        let $hasSelect2 = $(widgetOptionsRoot.widgetItem).find('[data-krajee-select2]');
         if ($hasSelect2.length > 0) {
             $hasSelect2.each(function() {
-                var id = $(this).attr('id');
-                var configSelect2 = eval($(this).attr('data-krajee-select2'));
+                let id = $(this).attr('id');
+                let configSelect2 = eval($(this).attr('data-krajee-select2'));
+                let select2Ops = $(this).attr('data-s2-options');
 
                 if ($(this).data('select2')) {
                     $(this).select2('destroy');
                 }
 
-                var configDepdrop = $(this).data('depdrop');
+                let configDepdrop = $(this).data('depdrop');
                 if (configDepdrop) {
                     configDepdrop = $.extend(true, {}, configDepdrop);
                     $(this).removeData().off();
@@ -455,20 +456,10 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
-
-                var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
-
-                $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
-                });
-
-                $('#' + id).on('select2:unselect', function() {
-                    window[kvClose] = true;
-                });
+                $.when($('#' + id).select2(configSelect2)).done(initS2Loading(id, select2Ops));
 
                if (configDepdrop) {
-                    var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
+                    let loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
                 }
             });
